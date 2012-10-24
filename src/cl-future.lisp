@@ -51,9 +51,9 @@
 
 (defun complete-future (future val)
   (setf (val future) val)
-  (when-let ((callback (completed-cb future)))
+  (when-let ((callbacks (completed-cb future)))
     (setf (completed-cb future) nil)
-    (register-action callback)))
+    (dolist (callback callbacks) (register-action callback))))
 
 (defun/cc yield ()
   (let/cc continuation
@@ -62,6 +62,6 @@
 (defun/cc wait-for (future)
   (let/cc continuation
     (if (not (done-p future))
-      (setf (completed-cb future) continuation)
+      (push continuation (completed-cb future))
       (funcall continuation)))
   (val future))
