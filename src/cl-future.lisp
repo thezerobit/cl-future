@@ -13,7 +13,7 @@
                 #:less-first)
   (:export #:future
            #:ident
-           #:done?
+           #:done-p
            #:register-future
            #:complete-future
            #:make-future
@@ -34,7 +34,7 @@
 (defparameter *actions* (seq))
 
 ;; functions
-(defun done? (future)
+(defun done-p (future)
   (slot-boundp future 'val))
 
 (defun make-future ()
@@ -61,7 +61,7 @@
 
 (defun/cc wait-for (future)
   (let/cc continuation
-    (if (not (done? future))
+    (if (not (done-p future))
       (setf (completed-cb future) continuation)
       (funcall continuation)))
   (val future))
