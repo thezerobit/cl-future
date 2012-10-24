@@ -6,12 +6,10 @@ delimited continuations.
 ## Usage
 
 ```common-lisp
-(use-package :cl-future)
-
 ;; example 1: futures
 
-(defparameter *f1-id* nil)
-(defparameter *f2-id* nil)
+(defparameter *f1* nil)
+(defparameter *f2* nil)
 
 (register-action
   (lambda ()
@@ -19,16 +17,16 @@ delimited continuations.
       (let ((f1 (make-future))
             (f2 (make-future)))
         (princ "Hello, ")
-        (setf *f1-id* (ident f1))
-        (setf *f2-id* (ident f2))
+        (setf *f1* f1)
+        (setf *f2* f2)
         (wait-for f1)
         (wait-for f2)
         (princ "World.")
         nil))))
 
-(register-action (lambda () (complete-future *f2-id* 'someval)))
+(register-action (lambda () (complete-future *f2* 'someval)))
 (register-action (lambda () (princ "... ")))
-(register-action (lambda () (complete-future *f1-id* 'someval)))
+(register-action (lambda () (complete-future *f1* 'someval)))
 
 (run-actions)
 ;; output: Hello, ... World.

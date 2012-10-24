@@ -31,17 +31,14 @@
    (completed-cb :accessor completed-cb :initform nil)))
 
 ;; parameters
-(defparameter *futures* (make-hash-table))
 (defparameter *actions* (seq))
 
 ;; functions
 (defun done? (future)
   (slot-boundp future 'val))
 
-(defun register-future (future)
-  (setf (gethash (ident future) *futures*) future))
-
-(defun make-future () (register-future (make-instance 'future)))
+(defun make-future ()
+  (make-instance 'future))
 
 (defun register-action (action)
   (setf *actions* (with-last *actions* action)))
@@ -52,13 +49,11 @@
              (setf *actions* (less-first *actions*))
              (funcall next))))
 
-(defun complete-future (id val)
-  (let ((future (gethash id *futures*)))
-    (when future
-      (setf (val future) val)
-      (when-let ((callback (completed-cb future)))
-        (setf (completed-cb future) nil)
-        (register-action callback)))))
+(defun complete-future (future val)
+  (setf (val future) val)
+  (when-let ((callback (completed-cb future)))
+    (setf (completed-cb future) nil)
+    (register-action callback)))
 
 (defun/cc yield ()
   (let/cc continuation
