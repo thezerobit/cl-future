@@ -1,5 +1,10 @@
 # CL-FUTURE
 
+DEPRECATED in favor of
+[GREEN-THREADS](https://github.com/deliciousrobots/green-threads). You
+might also be looking for a different library named
+[CL-FUTURE](https://github.com/jpalmucci/cl-future).
+
 A trivial future / lightweight thread library built on cl-cont
 delimited continuations.
 
